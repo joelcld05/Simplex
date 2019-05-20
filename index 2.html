@@ -10,84 +10,142 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="icon" type="image/png" href="images/favicon.png">
-
+  <link href="css/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
   <div class="container">
 
-    <div class="row" style="margin-top: 6%">
-      <div class="one-half column">
-        <h5>Ingrese cantidad de variables:</h5>
-        <div>
-          <input type="number" name="cantidad" id="cantidadv" min="1" value="1"/> 
-          <button id="reload">Cargar</button>
-        </div>
-      </div>
-    </div>
-
     <div class="row">
-      <div class="one-half column">
-        <h5>Ingrese la función objetivo:</h5>
-        <p>Si la variable no tienen valor </p>
-        <div>
-          <table id="fobjetivo">
-            <tr>
-              <td>X1</td>
-              <td class="condi">Condición</td>
-              <td>X1</td>
-            </tr>
-            <tr>  
-              <td>
-                f(nX) 
-              </td>
-              <td>
-                <select name="comparativo">
-                  <option value="<"><</option>
-                  <option value="<="><=</option>
-                  <option value="=" selected>=</option>
-                  <option value=">=">>=</option>
-                  <option value=">=">></option>
-                </select>   
-              </td>
-              <td>
-                <input type="number" value="0"/> 
-              </td>
-            </tr>
-          </table>
+      <div id="tabs">
+      	<ul>
+      		<li><a href="#tabs-1">Cantidad de Variables</a></li>
+      		<li><a href="#tabs-2">Función Objetivo</a></li>
+      		<li><a href="#tabs-3">Restricciones</a></li>
+          <li><a href="#tabs-4">Resultados</a></li>
+      	</ul>
+      	<div id="tabs-1">
+          <div class="row">
+            <h5>Ingrese cantidad de variables:</h5>
+            <div>
+              <input type="number" name="cantidad" id="cantidadv" min="1" value="1"/>
+              <button id="reload">Cargar</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="one-half column" >
-        <h5>Ingrese Restricciones:</h5>
-        <button id="agregaRes">Agregar Restricción</button>
-        <button id="eliminaRes">Elimina Restricción</button>
-        <div>
-          <table id="restriscciones">
-              <tr>
-                <td>X1</td>
-                <td class="condi">Condición</td>
-                <td>Solución</td>
-              </tr>
-              <tr>  
+      	<div id="tabs-2">
+          <div class="row">
+            <h5>Ingrese la función objetivo:</h5>
+            <p>Si la variable no tienen valor </p>
+            <div>
+              <table id="fobjetivo">
+                <tr>
+                  <td>X1</td>
+                  <td class="condi">Condición</td>
+                  <td>X1</td>
+                </tr>
+                <tr>
                   <td>
-                    <input type="number" value="0"/> 
+                    f(nX)
                   </td>
-                  <td class="condi">
+                  <td>
                     <select name="comparativo">
                       <option value="<"><</option>
                       <option value="<="><=</option>
-                      <option value="=">=</option>
+                      <option value="=" selected>=</option>
                       <option value=">=">>=</option>
                       <option value=">=">></option>
                     </select>
                   </td>
                   <td>
-                      <input type="number" value="0"/> 
+                    <input type="number" value="0"/>
                   </td>
                 </tr>
-          </table>
+              </table>
+            </div>
+          </div>
         </div>
+
+
+      	<div id="tabs-3">
+          <div class="row">
+            <h5>Ingrese Restricciones:</h5>
+            <div class="row">
+              <button id="agregaRes" class="three columns">Agregar Restricción</button>
+              <button id="eliminaRes" class="three columns">Elimina Restricción</button>
+            </div>
+            <div class="row">
+            </div>
+
+            <div>
+              <table id="restriscciones">
+                  <tr>
+                    <td>X1</td>
+                    <td class="condi">Condición</td>
+                    <td>Solución</td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <input type="number" value="0"/>
+                      </td>
+                      <td class="condi">
+                        <select name="comparativo">
+                          <option value="<"><</option>
+                          <option value="<="><=</option>
+                          <option value="=">=</option>
+                          <option value=">=">>=</option>
+                          <option value=">=">></option>
+                        </select>
+                      </td>
+                      <td>
+                          <input type="number" value="0"/>
+                      </td>
+                    </tr>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div id="tabs-4">
+          <div class="row">
+            <h5>Ingrese Restricciones:</h5>
+            <div class="row">
+              <button id="" class="three columns">Mostrar resultados</button>
+            </div>
+            <div class="row">
+            </div>
+
+            <div>
+              <table id="">
+                  <tr>
+                    <td>X1</td>
+                    <td class="condi">Condición</td>
+                    <td>Solución</td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <input type="number" value="0"/>
+                      </td>
+                      <td class="condi">
+                        <select name="comparativo">
+                          <option value="<"><</option>
+                          <option value="<="><=</option>
+                          <option value="=">=</option>
+                          <option value=">=">>=</option>
+                          <option value=">=">></option>
+                        </select>
+                      </td>
+                      <td>
+                          <input type="number" value="0"/>
+                      </td>
+                    </tr>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -96,8 +154,10 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="script/jquery-ui.js"></script>
 <script src="script/main.js"> </script>
   <script>
+      $( "#tabs" ).tabs();
       (function(app){
         app.init();
       })(window.App);

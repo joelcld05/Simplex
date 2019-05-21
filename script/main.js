@@ -3,7 +3,16 @@
         constVars:{
             totalrow:            1,
             totalcolumns:        2,
-            yahayganador: false
+            yahayganador:        false,
+            matrizvariables:     [],
+            indiceColumnap:      0,
+            columnaPivote:       [],
+            indiceFilaPivote:    0,
+            filaPivote:          [],
+            totaliteracciones:   0,
+            tabla:               $('<table class="result"></table>'),
+            tablarow:               $('<row></row>'),
+            tablacell:               $('<td></td>'),
         },
 
         tags:{
@@ -13,6 +22,7 @@
             eliminares:         $("#eliminaRes"),
             reload:             $("#reload"),
             cantidadv:          $("#cantidadv"),
+            mostrarR:         $("#mostrarR"),
         },
 
         init:function(){
@@ -34,6 +44,12 @@
                 myApp.eliminafila();
             });
 
+            myApp.tags.mostrarR.click(function(e){
+                e.preventDefault();
+                myApp.cargaMatrizSimplex();
+            });
+
+
             myApp.tags.reload.click(function(e){
                 e.preventDefault();
                 if(myApp.tags.cantidadv.val()>0){
@@ -47,8 +63,7 @@
             });
         },
 
-
-        agregaColumna: function(label){   
+        agregaColumna: function(label){
             myApp.tags.tablares.find('tr').each(function(n){
                 if(n===0){
                     $(this).find('td.condi').eq(0).before('<td class="addedtd">X'+label+'</td>');
@@ -58,7 +73,6 @@
             });
 
             myApp.tags.fobjetivo.find('tr').each(function(n){
-                
                 if(n==0){
                     $(this).find('td').last().after('<td class="addedtd">X'+label+'</td>');
                 }else{
@@ -87,8 +101,41 @@
             if(myApp.constVars.totalrow > 1){
                 myApp.tags.tablares.find('tr').last().remove();
                 myApp.constVars.totalrow--;
-            }            
+            }
         },
+
+        /**************************función simplex*****************************/
+
+        cargaMatrizSimplex: function(){
+          var cantX=0, cantY=1, cantVs=0;
+          cantX = parseInt(myApp.constVars.totalcolumns)+1;
+
+          myApp.tags.tablares.find('tr').each(function(n){
+              if(n > 0){
+                cantY++;
+                if($(this).find('td.condi select').val() !== "="){
+                  cantVs++;
+                }
+              }
+          });
+
+          myApp.tags.fobjetivo.find('tr').each(function(n){
+              if(n > 0){
+                $(this).find('td').find('input').each(function(n){
+                  console.log(this.value);
+                });
+              }
+          });
+
+
+          console.log("cantidad variables con Z: "+cantX);
+          console.log("cantidad restricciones: "+cantY);
+          console.log("cantidad variables de olgura: "+cantVs);
+
+
+        },
+
+        /*********************************************************************/
 
         decimaltoFraction: function(value, maxdenom){
             var best = { numer: 1, denom: 1, err: Math.abs(value - 1) }
@@ -105,8 +152,8 @@
             return best;
         },
 
-        
-        convertf: function(){ 
+
+        convertf: function(){
             var value = parseFloat($("#myInput").val());
             console.clear();
             console.log("Looking up " + value);
@@ -118,17 +165,7 @@
             $("#myResult").val(rational.numer + " / " + rational.denom);
         },
 
-        seleccionaGanador: function(){
 
-        },
-
-        winner: function(){
-
-        },
-
-        generawinner: function(){
-            
-        }
     }
     win.App = myApp;
 

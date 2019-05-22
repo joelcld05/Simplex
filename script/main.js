@@ -22,7 +22,7 @@
             eliminares:         $("#eliminaRes"),
             reload:             $("#reload"),
             cantidadv:          $("#cantidadv"),
-            mostrarR:         $("#mostrarR"),
+            mostrarR:           $("#mostrarR"),
         },
 
         init:function(){
@@ -107,8 +107,9 @@
         /**************************función simplex*****************************/
 
         cargaMatrizSimplex: function(){
-          var cantX=0, cantY=1, cantVs=0;
-          cantX = parseInt(myApp.constVars.totalcolumns)+1;
+          var cantX=0, cantY=1, cantVs=0,totx=0;
+
+          cantX = parseInt(myApp.constVars.totalcolumns)+2;
 
           myApp.tags.tablares.find('tr').each(function(n){
               if(n > 0){
@@ -119,19 +120,32 @@
               }
           });
 
-          myApp.tags.fobjetivo.find('tr').each(function(n){
-              if(n > 0){
-                $(this).find('td').find('input').each(function(n){
-                  console.log(this.value);
-                });
-              }
-          });
 
+          console.log("cantidad variables columnas: "+(cantX+cantVs));
+          console.log("cantidad variables filas: "+cantY);
 
-          console.log("cantidad variables con Z: "+cantX);
-          console.log("cantidad restricciones: "+cantY);
-          console.log("cantidad variables de olgura: "+cantVs);
+          totx=cantX+cantVs;
+            for(i=1;i>totx;i++){
+                var temparrey=[];
+                for(e=1;i>(cantX+cantVs);e++){
+                    temparrey.push(0);
+                    console.log(1);
+                }
+                myApp.constVars.matrizvariables.push(temparrey);
+            }
 
+            console.table(myApp.constVars.matrizvariables);
+            
+
+            myApp.tags.fobjetivo.find('tr').each(function(n){
+                if(n > 0){
+
+                }else if(n > 0){ 
+                    $(this).find('td').find('input').each(function(n){
+                        console.log(this.value);
+                    });
+                }
+            });
 
         },
 

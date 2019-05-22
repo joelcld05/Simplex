@@ -47,6 +47,8 @@
             myApp.tags.mostrarR.click(function(e){
                 e.preventDefault();
                 myApp.cargaMatrizSimplex();
+                myApp.identificaColumnaPivote();
+                myApp.identificaFilaPivote();
             });
 
 
@@ -105,12 +107,11 @@
         },
 
         /**************************función simplex*****************************/
+        //esta funcion carga la matrix simples para luego ser procezada
 
         cargaMatrizSimplex: function(){
-            var cantX=0, cantY=1, cantVs=0,totx=0;
-
+            var cantX=0, cantY=1, cantVs=0,totx=0,totequal=0;
             cantX = parseInt(myApp.constVars.totalcolumns)+2;
-
             myApp.tags.tablares.find('tr').each(function(n){
                 if(n > 0){
                     cantY++;
@@ -119,7 +120,6 @@
                     }
                 }
             });
-
             totx=cantX+cantVs;
             myApp.constVars.matrizvariables=new Array();
             for(e=0;e<cantY;e++){
@@ -129,26 +129,73 @@
                 }
                 myApp.constVars.matrizvariables.push(temparrey);
             }
-
             myApp.constVars.matrizvariables[0][0]=1;
+            myApp.constVars.matrizvariables[0][myApp.constVars.matrizvariables[0].length-1]=0;
 
             myApp.tags.fobjetivo.find('tr').find('td').find('input').each(function(e){
-                console.log(this);
                 myApp.constVars.matrizvariables[0][e+1] = parseInt(this.value);
             });
-            
+
             myApp.tags.tablares.find('tr').each(function(n){
-                $(this).find('td').each(function(e){
-                    if(Number.isInteger($(this).find('input').eq(0).val()){
-
-                    }else{
-
+              var toxs=1,hitdes=0;
+              var tempcontador=1;                                               //cuenta la cantidad de variables que se van incertando
+              if (n>0){                                                         //mayor que 0 porque la primera fila es heading
+                $(this).find('td').each(function(e){                            //busca todos los td
+                  var tempval = $(this).find('input').eq(0).val();              //busca el valor los inputs dentros de los td
+                    if(tempval){                                                //si encuentra input entra de otro modo va a l else
+                      if (parseInt(tempval) != 0){                              //si el valor es diferentes de cero lo almacena en el indice
+                        myApp.constVars.matrizvariables[n][tempcontador]=parseInt(tempval); // ALMACENA
+                      }
+                      tempcontador++;
+                    }else{                                                      //si encuentra igualdad
+                      toxs = cantX+n-totequal-2;                                //toma la cantida de variables que existen le suma la fila en la que se encuentra y le resta 2 para ir en fncion de los arreglos
+                      if ($(this).find("select").val() != "="){                 // identifica si es una igualdad t la cuenta para quitarsela al contador
+                        myApp.constVars.matrizvariables[n][toxs]=1;             // si no es una desigualdad guarda 1 en la pocicion de la restriccion
+                      }else{
+                        totequal++;                                             // aumenta si encuentra desigualdad
+                      };
+                      tempcontador=totx-1;                                      // como el ultimo valor que queda en solucion va a la ultima pocicion del arreglo
                     };
                 });
+              }
+              tempcontador = 1;
+              hitdes = 0;
             });
 
             console.table(myApp.constVars.matrizvariables);
+        },
 
+
+        identificaColumnaPivote: function(){
+          var columnapivote,indice,valor=0;
+          columnapivote = myApp.constVars.matrizvariables[0];
+          for(i=0; i<columnapivote.length;i++){
+            if(valor>columnapivote[i]){
+              valor = columnapivote[i];
+              indice = i;
+            }
+          }
+          myApp.constVars.columnaPivote = [indice,valor];
+        },
+
+
+        identificaFilaPivote: function(){
+          var filapivote,indice,valor=10000000000000000,div=0;
+          var columnapivote = myApp.constVars.matrizvariables;
+          var columnsp = myApp.constVars.columnaPivote;
+          for(i=0; i<columnapivote.length;i++){
+            try{
+              div = columnapivote[i][columnapivote[i].length-1]/columnapivote[i][columnsp[0]];
+              if(div>0 && div<valor){
+                valor = div;
+                indice = i;
+              }
+            }catch(e){
+              console.log("division por 0: "+e);
+            }
+          }
+          myApp.constVars.filaPivote = [indice,valor];
+          console.log(myApp.constVars.filaPivote);
         },
 
         /*********************************************************************/
@@ -163,7 +210,6 @@
                 best.numer = numer;
                 best.denom = denom;
                 best.err = err;
-                console.log(best.numer + "/" + best.denom + "=" + (numer/denom) + " error " + best.err);
             }
             return best;
         },

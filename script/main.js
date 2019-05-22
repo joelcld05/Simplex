@@ -4,7 +4,7 @@
             totalrow:            1,
             totalcolumns:        2,
             yahayganador:        false,
-            matrizvariables:     0,
+            matrizvariables:     [],
             indiceColumnap:      0,
             columnaPivote:       [],
             indiceFilaPivote:    0,
@@ -120,10 +120,6 @@
                 }
             });
 
-
-            console.log("cantidad variables columnas: "+(cantX+cantVs));
-            console.log("cantidad variables filas: "+cantY);
-
             totx=cantX+cantVs;
             myApp.constVars.matrizvariables=new Array();
             for(e=0;e<cantY;e++){
@@ -141,9 +137,17 @@
                 myApp.constVars.matrizvariables[0][e+1] = parseInt(this.value);
             });
             
-            console.table(myApp.constVars.matrizvariables);
+            myApp.tags.tablares.find('tr').each(function(n){
+                $(this).find('td').each(function(e){
+                    if(Number.isInteger($(this).find('input').eq(0).val()){
 
-            
+                    }else{
+
+                    };
+                });
+            });
+
+            console.table(myApp.constVars.matrizvariables);
 
         },
 

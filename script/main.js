@@ -4,7 +4,7 @@
             totalrow:            1,
             totalcolumns:        2,
             yahayganador:        false,
-            matrizvariables:     [],
+            matrizvariables:     0,
             indiceColumnap:      0,
             columnaPivote:       [],
             indiceFilaPivote:    0,
@@ -107,45 +107,43 @@
         /**************************función simplex*****************************/
 
         cargaMatrizSimplex: function(){
-          var cantX=0, cantY=1, cantVs=0,totx=0;
+            var cantX=0, cantY=1, cantVs=0,totx=0;
 
-          cantX = parseInt(myApp.constVars.totalcolumns)+2;
+            cantX = parseInt(myApp.constVars.totalcolumns)+2;
 
-          myApp.tags.tablares.find('tr').each(function(n){
-              if(n > 0){
-                cantY++;
-                if($(this).find('td.condi select').val() !== "="){
-                  cantVs++;
+            myApp.tags.tablares.find('tr').each(function(n){
+                if(n > 0){
+                    cantY++;
+                    if($(this).find('td.condi select').val() !== "="){
+                    cantVs++;
+                    }
                 }
-              }
-          });
+            });
 
 
-          console.log("cantidad variables columnas: "+(cantX+cantVs));
-          console.log("cantidad variables filas: "+cantY);
+            console.log("cantidad variables columnas: "+(cantX+cantVs));
+            console.log("cantidad variables filas: "+cantY);
 
-          totx=cantX+cantVs;
-            for(i=1;i>totx;i++){
-                var temparrey=[];
-                for(e=1;i>(cantX+cantVs);e++){
+            totx=cantX+cantVs;
+            myApp.constVars.matrizvariables=new Array();
+            for(e=0;e<cantY;e++){
+                var temparrey=new Array();
+                for(i=0;i<totx;i++){
                     temparrey.push(0);
-                    console.log(1);
                 }
                 myApp.constVars.matrizvariables.push(temparrey);
             }
 
-            console.table(myApp.constVars.matrizvariables);
-            
+            myApp.constVars.matrizvariables[0][0]=1;
 
-            myApp.tags.fobjetivo.find('tr').each(function(n){
-                if(n > 0){
-
-                }else if(n > 0){ 
-                    $(this).find('td').find('input').each(function(n){
-                        console.log(this.value);
-                    });
-                }
+            myApp.tags.fobjetivo.find('tr').find('td').find('input').each(function(e){
+                console.log(this);
+                myApp.constVars.matrizvariables[0][e+1] = parseInt(this.value);
             });
+            
+            console.table(myApp.constVars.matrizvariables);
+
+            
 
         },
 

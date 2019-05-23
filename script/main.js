@@ -3,6 +3,8 @@
         constVars:{
             totalrow:            1,
             totalcolumns:        2,
+            totvar:              0,
+            totvarS:             0,
             yahayganador:        false,
             matrizvariables:     [],
             indiceColumnap:      0,
@@ -49,13 +51,12 @@
                 myApp.cargaMatrizSimplex();
                 do{
                     myApp.identificaColumnaPivote();
-                    console.table(myApp.constVars.matrizvariables);
-                    myApp.identificaFilaPivote();
-                    console.table(myApp.constVars.matrizvariables);
                     myApp.creaTabla(myApp.constVars.matrizvariables);
+
+                    myApp.identificaFilaPivote();
                     myApp.convertFilaPivote();
                     myApp.convertrestofilas();
-                    console.table(myApp.constVars.matrizvariables);
+
                     myApp.creaTabla(myApp.constVars.matrizvariables);
 
                 } while (myApp.buscaValorNegativo());
@@ -173,7 +174,8 @@
               tempcontador = 1;
               hitdes = 0;
             });
-
+            myApp.constVars.totvar = cantX;
+            myApp.constVars.totvarS = cantVs;
             //console.table(myApp.constVars.matrizvariables);
         },
 
@@ -239,7 +241,7 @@
             for(i=0;i<myApp.constVars.matrizvariables.length;i++){
 
                 valorpivote = myApp.constVars.matrizvariables[i][columna]*(-1);
-                
+
                 if (i!=fila && valorpivote != 0 ){
                     for(e=0;e<myApp.constVars.matrizvariables[i].length;e++){
                         try{
@@ -250,7 +252,7 @@
                         myApp.constVars.matrizvariables[i][e]=val;
                     }
                 }
-                
+
             }
         },
 
@@ -283,30 +285,44 @@
         creaTabla: function (tableData) {
             var table = document.createElement('table');
             var tableBody = document.createElement('tbody');
-          
+            var rowhead = document.createElement('tr');
+            var celltablez = document.createElement('th');
+
+            celltablez.appendChild(document.createTextNode("Z"));
+
+            for (var i = 0; i < myApp.constVars.totvar; i++) {
+              var cell = document.createElement('th');
+              cell.appendChild(document.createTextNode("X"+(i+1)));
+              rowhead.appendChild(cell);
+            }
+
+            for (var i = 0; i < myApp.constVars.totvarZ; i++) {
+              var cell = document.createElement('th');
+              cell.appendChild(document.createTextNode("S"+(i+1)));
+              rowhead.appendChild(cell);
+            }
+
+            tableBody.appendChild(rowhead);
+
             tableData.forEach(function(rowData) {
               var row = document.createElement('tr');
-          
               rowData.forEach(function(cellData) {
                 var cell = document.createElement('td');
                 var cellinfo = myApp.decimaltoFraction(cellData,10000);
                 var textemp="";
-
                 if (cellinfo.denom!=1){
-                    textemp= cellinfo.numer+"/"+cellinfo.denom
-                }else{
-                    textemp =cellinfo.numer;
-                }
-                
+                  textemp= cellinfo.numer+"/"+cellinfo.denom
+                }else{ textemp =cellinfo.numer; }
                 cell.appendChild(document.createTextNode(textemp));
                 row.appendChild(cell);
               });
-          
               tableBody.appendChild(row);
             });
-          
+
             table.appendChild(tableBody);
+
             $("#appentable").append(table);
+
         }
     }
     win.App = myApp;

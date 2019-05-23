@@ -1,4 +1,4 @@
-# programacionLineal, Tablas simplex
+# Programación Lineal, Método Simplex
 Este proyecto es realizado con la finalidad de ahorrar tiempo al momento de realizar los cálculos que implican resolver las matrices del método Simplex. 
 El mismo esta desarrollado utilizando HTML, CSS (Skeleton template), Jquey
 

@@ -47,15 +47,20 @@
             myApp.tags.mostrarR.click(function(e){
                 e.preventDefault();
                 myApp.cargaMatrizSimplex();
-                myApp.identificaColumnaPivote();
-                myApp.identificaFilaPivote();
+                do{
+                    myApp.identificaColumnaPivote();
+                    myApp.identificaFilaPivote();
+                    myApp.creaTabla(myApp.constVars.matrizvariables);
+                    myApp.convertFilaPivote();
+                    myApp.convertrestofilas();
+                    myApp.creaTabla(myApp.constVars.matrizvariables);
+                } while (myApp.buscaValorNegativo());
             });
 
 
             myApp.tags.reload.click(function(e){
                 e.preventDefault();
                 if(myApp.tags.cantidadv.val()>0){
-                    console.log(myApp.tags.cantidadv.val() +' - '+ myApp.constVars.totalcolumns);
                     myApp.resertTable();
                     myApp.constVars.totalcolumns= myApp.tags.cantidadv.val();
                     for(i=1;i<myApp.constVars.totalcolumns;i++){
@@ -111,7 +116,7 @@
 
         cargaMatrizSimplex: function(){
             var cantX=0, cantY=1, cantVs=0,totx=0,totequal=0;
-            cantX = parseInt(myApp.constVars.totalcolumns)+2;
+            cantX = parseFloat(myApp.constVars.totalcolumns)+2;
             myApp.tags.tablares.find('tr').each(function(n){
                 if(n > 0){
                     cantY++;
@@ -133,7 +138,7 @@
             myApp.constVars.matrizvariables[0][myApp.constVars.matrizvariables[0].length-1]=0;
 
             myApp.tags.fobjetivo.find('tr').find('td').find('input').each(function(e){
-                myApp.constVars.matrizvariables[0][e+1] = parseInt(this.value);
+                myApp.constVars.matrizvariables[0][e+1] = parseFloat(this.value);
             });
 
             myApp.tags.tablares.find('tr').each(function(n){
@@ -143,8 +148,8 @@
                 $(this).find('td').each(function(e){                            //busca todos los td
                   var tempval = $(this).find('input').eq(0).val();              //busca el valor los inputs dentros de los td
                     if(tempval){                                                //si encuentra input entra de otro modo va a l else
-                      if (parseInt(tempval) != 0){                              //si el valor es diferentes de cero lo almacena en el indice
-                        myApp.constVars.matrizvariables[n][tempcontador]=parseInt(tempval); // ALMACENA
+                      if (parseFloat(tempval) != 0){                              //si el valor es diferentes de cero lo almacena en el indice
+                        myApp.constVars.matrizvariables[n][tempcontador]=parseFloat(tempval); // ALMACENA
                       }
                       tempcontador++;
                     }else{                                                      //si encuentra igualdad
@@ -195,7 +200,60 @@
             }
           }
           myApp.constVars.filaPivote = [indice,valor];
-          console.log(myApp.constVars.filaPivote);
+        },
+
+        convertFilaPivote: function(){
+            var fila,columna,valorpivote, columnamatriz,val;
+            fila = myApp.constVars.filaPivote[0];
+            columna = myApp.constVars.columnaPivote[0];
+            columnamatriz = myApp.constVars.matrizvariables[fila];
+            valorpivote = myApp.constVars.matrizvariables[fila][columna];
+            for(i=0;i<columnamatriz.length;i++){
+                try{
+                    val=columnamatriz[i]/valorpivote;
+                    console.log(columnamatriz[i]+"/"+valorpivote+ "="+val);
+                }catch(e){
+                    val=0;
+                }
+                myApp.constVars.matrizvariables[fila][i]=val;
+            }
+        },
+
+        convertrestofilas: function(){
+            var filap,columna,valorpivote, columnamatriz,val;
+
+            fila = myApp.constVars.filaPivote[0];
+            columna = myApp.constVars.columnaPivote[0];
+            columnamatriz = myApp.constVars.matrizvariables[fila];
+
+            for(i=0;i<myApp.constVars.matrizvariables.length;i++){
+
+                valorpivote = myApp.constVars.matrizvariables[i][columna]*(-1);
+                console.log(valorpivote);
+                
+                if (i!=fila && valorpivote != 0 ){
+                    for(e=0;e<myApp.constVars.matrizvariables[i].length;e++){
+                        try{
+                            val= myApp.constVars.matrizvariables[i][e] + (valorpivote*columnamatriz[e]);
+                            
+                        }catch(e){
+                            val=0;
+                        }
+                        myApp.constVars.matrizvariables[i][e]=val;
+                    }
+                }
+                
+            }
+        },
+
+        buscaValorNegativo: function(){
+            var flag=false;
+            for(i=0;i<myApp.constVars.matrizvariables[0].length;i++){
+                if(myApp.constVars.matrizvariables[0][i]<0){
+                    flag=true;
+                }
+            }
+            return flag;
         },
 
         /*********************************************************************/
@@ -214,20 +272,34 @@
             return best;
         },
 
+        creaTabla: function (tableData) {
+            var table = document.createElement('table');
+            var tableBody = document.createElement('tbody');
+          
+            tableData.forEach(function(rowData) {
+              var row = document.createElement('tr');
+          
+              rowData.forEach(function(cellData) {
+                var cell = document.createElement('td');
+                var cellinfo = myApp.decimaltoFraction(cellData,10000);
+                var textemp="";
 
-        convertf: function(){
-            var value = parseFloat($("#myInput").val());
-            console.clear();
-            console.log("Looking up " + value);
-            if (isNaN(value)) {
-                $("#myResult").val("NaN");
-                return;
-            }
-            var rational = find_rational(value, 10000);
-            $("#myResult").val(rational.numer + " / " + rational.denom);
-        },
-
-
+                if (cellinfo.denom!=1){
+                    textemp= cellinfo.numer+"/"+cellinfo.denom
+                }else{
+                    textemp =cellinfo.numer;
+                }
+                
+                cell.appendChild(document.createTextNode(textemp));
+                row.appendChild(cell);
+              });
+          
+              tableBody.appendChild(row);
+            });
+          
+            table.appendChild(tableBody);
+            $("#appentable").append(table);
+        }
     }
     win.App = myApp;
 

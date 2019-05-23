@@ -11,8 +11,8 @@
             filaPivote:          [],
             totaliteracciones:   0,
             tabla:               $('<table class="result"></table>'),
-            tablarow:               $('<row></row>'),
-            tablacell:               $('<td></td>'),
+            tablarow:            $('<row></row>'),
+            tablacell:           $('<td></td>'),
         },
 
         tags:{
@@ -49,11 +49,15 @@
                 myApp.cargaMatrizSimplex();
                 do{
                     myApp.identificaColumnaPivote();
+                    console.table(myApp.constVars.matrizvariables);
                     myApp.identificaFilaPivote();
+                    console.table(myApp.constVars.matrizvariables);
                     myApp.creaTabla(myApp.constVars.matrizvariables);
                     myApp.convertFilaPivote();
                     myApp.convertrestofilas();
+                    console.table(myApp.constVars.matrizvariables);
                     myApp.creaTabla(myApp.constVars.matrizvariables);
+
                 } while (myApp.buscaValorNegativo());
             });
 
@@ -116,12 +120,14 @@
 
         cargaMatrizSimplex: function(){
             var cantX=0, cantY=1, cantVs=0,totx=0,totequal=0;
+
             cantX = parseFloat(myApp.constVars.totalcolumns)+2;
+
             myApp.tags.tablares.find('tr').each(function(n){
                 if(n > 0){
                     cantY++;
                     if($(this).find('td.condi select').val() !== "="){
-                    cantVs++;
+                        cantVs++;
                     }
                 }
             });
@@ -134,6 +140,7 @@
                 }
                 myApp.constVars.matrizvariables.push(temparrey);
             }
+
             myApp.constVars.matrizvariables[0][0]=1;
             myApp.constVars.matrizvariables[0][myApp.constVars.matrizvariables[0].length-1]=0;
 
@@ -167,7 +174,7 @@
               hitdes = 0;
             });
 
-            console.table(myApp.constVars.matrizvariables);
+            //console.table(myApp.constVars.matrizvariables);
         },
 
 
@@ -185,7 +192,7 @@
 
 
         identificaFilaPivote: function(){
-          var filapivote,indice,valor=10000000000000000,div=0;
+          var filapivote,indice,valor=100000000000000000,div=0;
           var columnapivote = myApp.constVars.matrizvariables;
           var columnsp = myApp.constVars.columnaPivote;
           for(i=0; i<columnapivote.length;i++){
@@ -196,27 +203,30 @@
                 indice = i;
               }
             }catch(e){
-              console.log("division por 0: "+e);
+               //console.log("division por 0: "+e);
             }
           }
           myApp.constVars.filaPivote = [indice,valor];
         },
 
         convertFilaPivote: function(){
+
             var fila,columna,valorpivote, columnamatriz,val;
             fila = myApp.constVars.filaPivote[0];
             columna = myApp.constVars.columnaPivote[0];
             columnamatriz = myApp.constVars.matrizvariables[fila];
             valorpivote = myApp.constVars.matrizvariables[fila][columna];
+
             for(i=0;i<columnamatriz.length;i++){
                 try{
                     val=columnamatriz[i]/valorpivote;
-                    console.log(columnamatriz[i]+"/"+valorpivote+ "="+val);
+                    //console.log(columnamatriz[i]+"/"+valorpivote+ "="+val);
                 }catch(e){
                     val=0;
                 }
                 myApp.constVars.matrizvariables[fila][i]=val;
             }
+
         },
 
         convertrestofilas: function(){
@@ -229,13 +239,11 @@
             for(i=0;i<myApp.constVars.matrizvariables.length;i++){
 
                 valorpivote = myApp.constVars.matrizvariables[i][columna]*(-1);
-                console.log(valorpivote);
                 
                 if (i!=fila && valorpivote != 0 ){
                     for(e=0;e<myApp.constVars.matrizvariables[i].length;e++){
                         try{
-                            val= myApp.constVars.matrizvariables[i][e] + (valorpivote*columnamatriz[e]);
-                            
+                            val = myApp.constVars.matrizvariables[i][e] + (valorpivote*columnamatriz[e]);
                         }catch(e){
                             val=0;
                         }
@@ -302,5 +310,4 @@
         }
     }
     win.App = myApp;
-
 })(window);

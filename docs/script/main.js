@@ -49,6 +49,7 @@
             myApp.tags.mostrarR.click(function(e){
                 e.preventDefault();
                 myApp.cargaMatrizSimplex();
+                $("#appentable *").remove();
                 do{
                     myApp.identificaColumnaPivote();
                     myApp.creaTabla(myApp.constVars.matrizvariables);
